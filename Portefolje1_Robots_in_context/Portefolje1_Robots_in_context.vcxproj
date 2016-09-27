@@ -23,7 +23,8 @@
     <ClInclude Include="Image.hpp" />
     <ClInclude Include="macros.hpp" />
     <ClInclude Include="PPMLoader.hpp" />
-    <ClInclude Include="transformmatrix.h" />
+    <ClInclude Include="Robot.h" />
+    <ClInclude Include="TransformationMatrix.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Bane1.pgm" />
@@ -34,7 +35,8 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="PPMLoader.cpp" />
     <ClCompile Include="readpgmtest.cpp" />
-    <ClCompile Include="transformmatrix.cpp" />
+    <ClCompile Include="Robot.cpp" />
+    <ClCompile Include="TransformationMatrix.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{07633695-A56B-46BF-8A33-AFA9BB4899EE}</ProjectGuid>

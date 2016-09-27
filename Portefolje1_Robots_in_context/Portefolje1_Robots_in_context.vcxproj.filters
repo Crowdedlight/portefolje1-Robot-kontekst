@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="transformmatrix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="bresenham.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -30,15 +27,18 @@
     <ClInclude Include="PPMLoader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Robot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformationMatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Bane1.pgm" />
     <None Include="testout.pgm" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="transformmatrix.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="bresenham.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -49,6 +49,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="readpgmtest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Robot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformationMatrix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
