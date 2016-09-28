@@ -107,18 +107,22 @@ int main(int argc) {
 
 	//MOVE 1
 	cout << endl << "1. TRANSLATION/ROTATION MATRIX " << endl;
+    cout << "---------------------------------" << endl;
     robot.move(H1, img);    
 	
 	//MOVE 2
 	cout << endl << "2. TRANSLATION/ROTATION MATRIX " << endl;
+    cout << "---------------------------------" << endl;
     robot.move(H2, img);
    
 	//MOVE 3
 	cout << endl << "3. TRANSLATION/ROTATION MATRIX " << endl;
+    cout << "---------------------------------" << endl;
     robot.move(H3, img);
     	
 	//MOVE 4
 	cout << endl << "4. TRANSLATION/ROTATION MATRIX " << endl;
+    cout << "---------------------------------" << endl;
     robot.move(H4, img);
    
     //Calculate Workspace
