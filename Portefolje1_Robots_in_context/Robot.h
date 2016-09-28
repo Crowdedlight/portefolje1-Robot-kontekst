@@ -30,6 +30,7 @@ private:
     double orientation = 0; // Orientation is 0 when pointing in the "normal" positive x-axis. 180 is opposite
     double lastPosX;
     double lastPosY;
-    TransformationMatrix lastTransformation;
+    TransformationMatrix lastTransformationOrder;
+    TransformationMatrix currTransformation;
 };
 

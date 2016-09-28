@@ -5,7 +5,8 @@
 Robot::Robot(string name, TransformationMatrix startMatrix)
 {
     this->name = name;
-    this->lastTransformation = startMatrix;
+    this->lastTransformationOrder = startMatrix;
+    this->currTransformation = startMatrix;
     this->lastPosX = startMatrix.matrix[0][2];
     this->lastPosY = startMatrix.matrix[1][2];
 }
@@ -55,7 +56,7 @@ void Robot::rotate(double** resultAr, double tempa, double tempb, double** oldMa
     {
         if ((resultAr[0][2] - tempa) == 0) // if new X is 0 - move vertical
         {
-            cout << "Moving vertical as current oriantation is correct" << endl;
+            cout << "Want To Move vertical" << endl;
             if (oldMatrix1[1][2] < resultAr[1][2]) // if new Y is larger than old Y - move in positive Y direction
             {
                 tempOrientation = orientation;
@@ -83,7 +84,7 @@ void Robot::rotate(double** resultAr, double tempa, double tempb, double** oldMa
         }
         if ((resultAr[1][2] - tempb) == 0) // if new Y is 0 - move horizontal
         {
-            cout << "Moving horinzontal" << endl;
+            cout << "Want To Move horinzontal" << endl;
             if (tempa < resultAr[0][2]) // if new X is larger than old X - move in positive X direction
             {
                 tempOrientation = orientation;
@@ -169,14 +170,15 @@ Point Robot::workspaceCal(vector<Point> pointList)
 void Robot::move(TransformationMatrix newMatrix, Image* img)
 {
     //Multiply to make new movements
-    TransformationMatrix newMove = this->lastTransformation * newMatrix;
+    TransformationMatrix newMove = this->currTransformation * newMatrix;
 
     //Rotate
-    rotate(newMove.matrix, lastPosX, lastPosY, lastTransformation.matrix, newMatrix.matrix);
+    //Should be rewritten to not depend on last transformation Matrix and instead check depending on it's current orientation saved in robotclass
+    rotate(newMove.matrix, lastPosX, lastPosY, lastTransformationOrder.matrix, newMatrix.matrix);
 
     //Move Robot
     double xres, yres;
-
+    cout << "Moving Robot" << endl;
     for (double i = 0; i <= 1; i += 0.001) // Drawing the line between 2 point. Steps is set to 1000, but should have been calculated relative to line length
     {
         xres = ((newMove.matrix[0][2] - lastPosX) * i) + lastPosX;
@@ -197,8 +199,9 @@ void Robot::move(TransformationMatrix newMatrix, Image* img)
     lastPosX = newMove.matrix[0][2];
     lastPosY = newMove.matrix[1][2];
 
-    //Update last Transformation
-    lastTransformation = newMove;
+    //Update last/current Transformation
+    lastTransformationOrder = newMatrix;
+    currTransformation = newMove;
 }
 
 double Robot::getDistance(double x, double y) // Get distance according to whether to move in X direction or Y direction only or to move along hyp
