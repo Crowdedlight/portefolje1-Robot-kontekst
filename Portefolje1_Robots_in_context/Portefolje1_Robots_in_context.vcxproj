@@ -34,7 +34,7 @@
     <ClCompile Include="bresenham.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="PPMLoader.cpp" />
-    <ClCompile Include="readpgmtest.cpp" />
+    <ClCompile Include="source.cpp" />
     <ClCompile Include="Robot.cpp" />
     <ClCompile Include="TransformationMatrix.cpp" />
   </ItemGroup>
