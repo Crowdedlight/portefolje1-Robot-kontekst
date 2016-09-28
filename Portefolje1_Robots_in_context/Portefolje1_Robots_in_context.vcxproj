@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Image.hpp" />
-    <ClInclude Include="macros.hpp" />
     <ClInclude Include="PPMLoader.hpp" />
     <ClInclude Include="Robot.h" />
     <ClInclude Include="TransformationMatrix.h" />

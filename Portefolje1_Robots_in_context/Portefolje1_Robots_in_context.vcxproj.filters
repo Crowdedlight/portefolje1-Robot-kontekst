@@ -18,9 +18,6 @@
     <ClInclude Include="Image.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="macros.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PPMLoader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

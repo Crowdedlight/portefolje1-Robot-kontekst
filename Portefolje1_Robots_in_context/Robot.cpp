@@ -47,6 +47,7 @@ void Robot::rotate(double** resultAr, double** oldMatrix1, double** oldMatrix2)
 {
     if ((resultAr[0][2] - lastPosX) == 0 && (resultAr[1][2] - lastPosY) == 0) // if no translation only rotate (If X and Y is 0)
     {
+        cout << "Only rotating in this transformation." << endl;
         orientation = (acos(resultAr[0][0]) * 180 / PI_);
         tempOrientation = orientation;
         cout << "Time of rotation: " << timeOfMotion(angleDistance((acos(resultAr[0][0]) * 180 / PI_))) << "s" << endl;
@@ -61,7 +62,7 @@ void Robot::rotate(double** resultAr, double** oldMatrix1, double** oldMatrix2)
             {
                 tempOrientation = orientation;
                 orientation = 90;
-                cout << "Orientation: Pointing downwards" << endl;
+                cout << "Orientation Changed: Now Pointing downwards" << endl;
                 //print distance and speed
 
                 if (angleDistance(abs(orientation - tempOrientation)) != 0) // only print if there was a rotation 
@@ -74,7 +75,7 @@ void Robot::rotate(double** resultAr, double** oldMatrix1, double** oldMatrix2)
             {
                 tempOrientation = orientation;
                 orientation = -90;
-                cout << "Orientation: Pointing upwards" << endl;
+                cout << "Orientation Changed: Now Pointing upwards" << endl;
                 //print distance and speed
                 if (angleDistance(abs(orientation - tempOrientation)) != 0) // only print if there was a rotation 
                 {
@@ -89,7 +90,7 @@ void Robot::rotate(double** resultAr, double** oldMatrix1, double** oldMatrix2)
             {
                 tempOrientation = orientation;
                 orientation = 0;
-                cout << "Orientation: Pointing right" << endl;
+                cout << "Orientation Changed: Now Pointing right" << endl;
                 //print distance and speed
                 if (angleDistance(abs(orientation - tempOrientation)) != 0) // only print if there was a rotation 
                 {
@@ -102,7 +103,7 @@ void Robot::rotate(double** resultAr, double** oldMatrix1, double** oldMatrix2)
 
                 tempOrientation = orientation;
                 orientation = 180;
-                cout << "Orientation: Pointing left" << endl;
+                cout << "Orientation Changed: Now Pointing left" << endl;
                 //print distance and speed
                 if (angleDistance(abs(orientation - tempOrientation)) != 0) // only print if there was a rotation 
                 {
@@ -113,7 +114,7 @@ void Robot::rotate(double** resultAr, double** oldMatrix1, double** oldMatrix2)
     }
     if ((resultAr[0][2] - lastPosX) != 0 && (resultAr[1][2] - lastPosY) != 0) // move direct to target if both X and Y is non-zero
     {
-
+        cout << "Rotating directly to target as both x and y is non-zero" << endl;
         double hyp = sqrt(pow((resultAr[0][2] - lastPosX), 2) + pow((resultAr[1][2] - lastPosY), 2));
         double angle = (acos(abs(oldMatrix2[0][2]) / hyp)) * 180 / PI_;
 
@@ -122,7 +123,6 @@ void Robot::rotate(double** resultAr, double** oldMatrix1, double** oldMatrix2)
         ///print distance and speed
 
         cout << "Time of rotation: " << timeOfMotion(angleDistance(tempAngle)) << "s" << endl;
-        //}
     }
 }
 
@@ -178,7 +178,7 @@ void Robot::move(TransformationMatrix newMatrix, Image* img)
 
     //Move Robot
     double xres, yres;
-    cout << "Moving Robot" << endl;
+    cout << "Moving Robot To Target" << endl;
     for (double i = 0; i <= 1; i += 0.001) // Drawing the line between 2 point. Steps is set to 1000, but should have been calculated relative to line length
     {
         xres = ((newMove.matrix[0][2] - lastPosX) * i) + lastPosX;
@@ -187,13 +187,13 @@ void Robot::move(TransformationMatrix newMatrix, Image* img)
         img->setPixel8U(xres, yres, 0);
     }
 
-    // IF orientation was changed for movement, set orientation back
-    setOrientation();
-
     //PRINT SPEED AND DISTANCE
     double distance = getDistance((newMove.matrix[0][2] - lastPosX), (newMove.matrix[1][2] - lastPosY));
     if (timeOfMotion(distance) != 0)
         cout << "Time of translation: " << timeOfMotion(distance) << "s" << endl;
+
+    // IF orientation was changed for movement, set orientation back
+    setOrientation();
 
     //Update last position
     lastPosX = newMove.matrix[0][2];
