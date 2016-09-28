@@ -26,15 +26,13 @@ int main(int argc) {
 	int channel = 0; // allways 0 on grayscale image
 
 	// Initialize arrays for translations start
-    TransformationMatrix resultAr;
-    TransformationMatrix oldresultAr;
 	TransformationMatrix H0;
     TransformationMatrix H1;
     TransformationMatrix H2;
     TransformationMatrix H3;
     TransformationMatrix H4;
 	
-	// H0
+	// H0 - Selected Startposition with orientation
 	double rot0 = 0;
 	H0.matrix[0][0] = cos(rot0 * R2D);
 	H0.matrix[1][0] = sin(rot0 * R2D);
@@ -105,92 +103,27 @@ int main(int argc) {
 	H4.matrix[1][2] = 500;
 	H4.matrix[2][2] = 1;
 
-	// Initialize arrays for translations end
-
-	resultAr = H0;
-	oldresultAr = H0;
-	double tempa;
-	double tempb;
-	double distance;
-
-
-	tempa = resultAr.matrix[0][2];
-	tempb = resultAr.matrix[1][2];	
-
-    //Init robot
-    Robot robot("Skynet");
+    //Init robot - name and start position/oriantation
+    Robot robot("Skynet", H0);
 
 	//MOVE 1
-	resultAr = H0 * H1;
 	cout << endl << "1. TRANSLATION/ROTATION MATRIX " << endl;
-	robot.rotate(resultAr.matrix, tempa, tempb, H0.matrix, H1.matrix); 
-
-    robot.move(resultAr, img, tempa, tempb);
-
-	// IF orientation was changed for movement, set orientation back
-	robot.setOrientation();
-
-	//PRINT SPEED AND DISTANCE
-	distance = robot.getDistance((resultAr.matrix[0][2] - tempa), (resultAr.matrix[1][2] - tempb));
-	if(robot.timeOfMotion(distance) != 0)
-	cout << "Time of translation: " << robot.timeOfMotion(distance) << endl;
-
-
-	tempa = resultAr.matrix[0][2];
-	tempb = resultAr.matrix[1][2];
+    robot.move(H1, img);    
 	
 	//MOVE 2
-	resultAr = resultAr * H2;
 	cout << endl << "2. TRANSLATION/ROTATION MATRIX " << endl;
-
-	robot.rotate(resultAr.matrix, tempa, tempb, H1.matrix, H2.matrix);
-    
-    // MOVE
-    robot.move(resultAr, img, tempa, tempb);
-	  
-	// IF orientation was changed for movement, set orientation back
-	robot.setOrientation();
-
-	//PRINT SPEED AND DISTANCE
-	distance = robot.getDistance((resultAr.matrix[0][2] - tempa), (resultAr.matrix[1][2] - tempb));
-	if (robot.timeOfMotion(distance) != 0)
-	cout << "Time of translation: " << robot.timeOfMotion(distance) << endl;
-
-	tempa = resultAr.matrix[0][2];
-	tempb = resultAr.matrix[1][2];
-
+    robot.move(H2, img);
+   
 	//MOVE 3
-	resultAr = resultAr * H3;
 	cout << endl << "3. TRANSLATION/ROTATION MATRIX " << endl;
-
-	robot.rotate(resultAr.matrix, tempa, tempb, H2.matrix, H3.matrix);
-    robot.move(resultAr, img, tempa, tempb);
-
-	// IF orientation was changed for movement, set orientation back
-	robot.setOrientation();
-	//PRINT SPEED AND DISTANCE
-	distance = robot.getDistance((resultAr.matrix[0][2] - tempa), (resultAr.matrix[1][2] - tempb));
-	if (robot.timeOfMotion(distance) != 0)
-	cout << "Time of translation: " << robot.timeOfMotion(distance) << endl;
-
-	tempa = resultAr.matrix[0][2];
-	tempb = resultAr.matrix[1][2];
-
+    robot.move(H3, img);
+    	
 	//MOVE 4
-	resultAr = resultAr * H4;
 	cout << endl << "4. TRANSLATION/ROTATION MATRIX " << endl;
-	robot.rotate(resultAr.matrix, tempa, tempb, H3.matrix, H4.matrix);
-
-    robot.move(resultAr, img, tempa, tempb);
-
-	// IF orientation was changed for movement, set orientation back
-	robot.setOrientation();
-	//PRINT SPEED AND DISTANCE
-	distance = robot.getDistance((resultAr.matrix[0][2] - tempa), (resultAr.matrix[1][2] - tempb));
-	if (robot.timeOfMotion(distance) != 0)
-	cout << "Time of translation: " << robot.timeOfMotion(distance) << endl;
-
-	robot.printWorkSpace(resultAr.matrix, H2.matrix); //TODO fix so it works by getting though all transformations
+    robot.move(H4, img);
+   
+    //Calculate Workspace
+	robot.printWorkSpace(H1, H1*H2, H1*H2*H3, H1*H2*H3*H4);
 
     std::cout << endl << "saving image..." << std::endl;
     // save image

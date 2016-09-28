@@ -2,9 +2,12 @@
 
 
 
-Robot::Robot(string name)
+Robot::Robot(string name, TransformationMatrix startMatrix)
 {
     this->name = name;
+    this->lastTransformation = startMatrix;
+    this->lastPosX = startMatrix.matrix[0][2];
+    this->lastPosY = startMatrix.matrix[1][2];
 }
 
 double Robot::timeOfMotion(double distance) // takes a distance and calculate time duration from a given speed
@@ -38,7 +41,7 @@ void Robot::setOrientation() // After each move, check whether the rotation is b
 
 }
 
-//Rotate routine is actually the one "rotating" the robot - this should have been in a Robot Class to seperate it from the translation
+//Rotate routine is actually the one "rotating" the robot 
 void Robot::rotate(double** resultAr, double tempa, double tempb, double** oldMatrix1, double** oldMatrix2)
 {
     if ((resultAr[0][2] - tempa) == 0 && (resultAr[1][2] - tempb) == 0) // if no translation only rotate (If X and Y is 0)
@@ -52,7 +55,7 @@ void Robot::rotate(double** resultAr, double tempa, double tempb, double** oldMa
     {
         if ((resultAr[0][2] - tempa) == 0) // if new X is 0 - move vertical
         {
-            cout << "Moving vertical" << endl;
+            cout << "Moving vertical as current oriantation is correct" << endl;
             if (oldMatrix1[1][2] < resultAr[1][2]) // if new Y is larger than old Y - move in positive Y direction
             {
                 tempOrientation = orientation;
@@ -122,53 +125,80 @@ void Robot::rotate(double** resultAr, double tempa, double tempb, double** oldMa
     }
 }
 
-void Robot::printWorkSpace(double** a, double** b)
-{
+void Robot::printWorkSpace(TransformationMatrix T1, TransformationMatrix T2, TransformationMatrix T3, TransformationMatrix T4)
+{    
+    //Make into points for easier usage
+    Point T1_P(T1.matrix[0][2], T1.matrix[1][2]);
+    Point T2_P(T2.matrix[0][2], T2.matrix[1][2]);
+    Point T3_P(T3.matrix[0][2], T3.matrix[1][2]);
+    Point T4_P(T4.matrix[0][2], T4.matrix[1][2]);
 
-    prevPoint.x = a[0][2];
-    prevPoint.y = a[1][2];
+    //Add to vector for loop calculation
+    vector<Point> pointList;
+    pointList.push_back(T1_P);
+    pointList.push_back(T2_P);
+    pointList.push_back(T3_P);
+    pointList.push_back(T4_P);
+    
+    //Calculate highest translation
+    Point workspace = workspaceCal(pointList);
 
-    Point point = workspaceCal(b);
-    cout << endl << "Lowest possible workspace is: (x,y) = (" << point.x << "," << point.y << ")" << endl;
+    cout << endl << "Lowest possible workspace is: (x,y) = (" << workspace.x << "," << workspace.y << ")" << endl;
 }
 
-Point Robot::workspaceCal(double** transformation)
+Point Robot::workspaceCal(vector<Point> pointList)
 {
-    static int lowestX = transformation[0][2];
-    static int highestX = transformation[0][2];
-    static int lowestY = transformation[1][2];
-    static int highestY = transformation[1][2];
+    //Temp variable to save result in
+    Point workspace;
 
-    if (transformation[0][2] < lowestX)
-        lowestX = transformation[0][2];
+    // find highest x,y
+    for (int i = 0; i < pointList.size(); i++)
+    {
+        //x
+        if (pointList[i].x > workspace.x)
+            workspace.x = pointList[i].x;
 
-    else if (transformation[0][2] > highestX)
-        highestX = transformation[0][2];
+        //y
+        if (pointList[i].y > workspace.y)
+            workspace.y = pointList[i].y;
+    }
 
-    if (transformation[1][2] > highestY)
-        highestY = transformation[1][2];
-
-    else if (transformation[1][2] < lowestY)
-        lowestY = transformation[1][2];
-
-
-    Point xy((highestX - lowestX), (highestY - lowestY));
-    return xy;
+    return workspace;
 }
 
-void Robot::move(TransformationMatrix move, Image* img, double tempa, double tempb)
+void Robot::move(TransformationMatrix newMatrix, Image* img)
 {
-    double ares, bres;
+    //Multiply to make new movements
+    TransformationMatrix newMove = this->lastTransformation * newMatrix;
+
+    //Rotate
+    rotate(newMove.matrix, lastPosX, lastPosY, lastTransformation.matrix, newMatrix.matrix);
+
+    //Move Robot
+    double xres, yres;
 
     for (double i = 0; i <= 1; i += 0.001) // Drawing the line between 2 point. Steps is set to 1000, but should have been calculated relative to line length
     {
-        ares = ((move.matrix[0][2] - tempa) * i) + tempa;
-        bres = ((move.matrix[1][2] - tempb) * i) + tempb;
+        xres = ((newMove.matrix[0][2] - lastPosX) * i) + lastPosX;
+        yres = ((newMove.matrix[1][2] - lastPosY) * i) + lastPosY;
 
-        img->setPixel8U(ares, bres, 0);
+        img->setPixel8U(xres, yres, 0);
     }
 
-    //TODO update tempa,tempb som er currentx, currenty
+    // IF orientation was changed for movement, set orientation back
+    setOrientation();
+
+    //PRINT SPEED AND DISTANCE
+    double distance = getDistance((newMove.matrix[0][2] - lastPosX), (newMove.matrix[1][2] - lastPosY));
+    if (timeOfMotion(distance) != 0)
+        cout << "Time of translation: " << timeOfMotion(distance) << endl;
+
+    //Update last position
+    lastPosX = newMove.matrix[0][2];
+    lastPosY = newMove.matrix[1][2];
+
+    //Update last Transformation
+    lastTransformation = newMove;
 }
 
 double Robot::getDistance(double x, double y) // Get distance according to whether to move in X direction or Y direction only or to move along hyp
