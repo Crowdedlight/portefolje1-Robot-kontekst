@@ -11,7 +11,7 @@ class Robot
 public:
 
     Robot(string name, TransformationMatrix startMatrix);
-    void rotate(double** resultAr, double tempa, double tempb, double** oldmat1, double** oldmat2); // rotating robot
+    void rotate(double** resultAr, double** oldmat1, double** oldmat2); // rotating robot
     void move(TransformationMatrix newMove, Image* img);
     void setOrientation(); // set orientation after a movie
     double timeOfMotion(double distance); // the time it's take to drive a distance

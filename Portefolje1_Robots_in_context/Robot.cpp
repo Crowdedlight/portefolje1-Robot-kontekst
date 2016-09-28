@@ -36,25 +36,25 @@ void Robot::setOrientation() // After each move, check whether the rotation is b
         cout << "Translation is over and orientation is changed back from " << orientation << " to " << tempOrientation << endl;
         tempAngle = abs(tempOrientation - orientation);
         orientation = tempOrientation;
-        cout << "Time of rotation: " << timeOfMotion(angleDistance(tempAngle)) << endl;
+        cout << "Time of rotation: " << timeOfMotion(angleDistance(tempAngle)) << "s" << endl;
 
     }
 
 }
 
 //Rotate routine is actually the one "rotating" the robot 
-void Robot::rotate(double** resultAr, double tempa, double tempb, double** oldMatrix1, double** oldMatrix2)
+void Robot::rotate(double** resultAr, double** oldMatrix1, double** oldMatrix2)
 {
-    if ((resultAr[0][2] - tempa) == 0 && (resultAr[1][2] - tempb) == 0) // if no translation only rotate (If X and Y is 0)
+    if ((resultAr[0][2] - lastPosX) == 0 && (resultAr[1][2] - lastPosY) == 0) // if no translation only rotate (If X and Y is 0)
     {
         orientation = (acos(resultAr[0][0]) * 180 / PI_);
         tempOrientation = orientation;
-        cout << "Time of rotation: " << timeOfMotion(angleDistance((acos(resultAr[0][0]) * 180 / PI_))) << endl;
+        cout << "Time of rotation: " << timeOfMotion(angleDistance((acos(resultAr[0][0]) * 180 / PI_))) << "s" << endl;
 
     }
-    else if ((resultAr[0][2] - tempa) == 0 || (resultAr[1][2] - tempb) == 0) // Else if at least one of either X or Y is non-zero, rotate to that direction
+    else if ((resultAr[0][2] - lastPosX) == 0 || (resultAr[1][2] - lastPosY) == 0) // Else if at least one of either X or Y is non-zero, rotate to that direction
     {
-        if ((resultAr[0][2] - tempa) == 0) // if new X is 0 - move vertical
+        if ((resultAr[0][2] - lastPosX) == 0) // if new X is 0 - move vertical
         {
             cout << "Want To Move vertical" << endl;
             if (oldMatrix1[1][2] < resultAr[1][2]) // if new Y is larger than old Y - move in positive Y direction
@@ -66,7 +66,7 @@ void Robot::rotate(double** resultAr, double tempa, double tempb, double** oldMa
 
                 if (angleDistance(abs(orientation - tempOrientation)) != 0) // only print if there was a rotation 
                 {
-                    cout << "Time of rotation: " << timeOfMotion(angleDistance(abs(orientation - tempOrientation))) << endl;
+                    cout << "Time of rotation: " << timeOfMotion(angleDistance(abs(orientation - tempOrientation))) << "s" << endl;
                 }
             }
 
@@ -78,14 +78,14 @@ void Robot::rotate(double** resultAr, double tempa, double tempb, double** oldMa
                 //print distance and speed
                 if (angleDistance(abs(orientation - tempOrientation)) != 0) // only print if there was a rotation 
                 {
-                    cout << "Time of rotation: " << timeOfMotion(angleDistance(abs(orientation - tempOrientation))) << endl;
+                    cout << "Time of rotation: " << timeOfMotion(angleDistance(abs(orientation - tempOrientation))) << "s" << endl;
                 }
             }
         }
-        if ((resultAr[1][2] - tempb) == 0) // if new Y is 0 - move horizontal
+        if ((resultAr[1][2] - lastPosY) == 0) // if new Y is 0 - move horizontal
         {
             cout << "Want To Move horinzontal" << endl;
-            if (tempa < resultAr[0][2]) // if new X is larger than old X - move in positive X direction
+            if (lastPosX < resultAr[0][2]) // if new X is larger than old X - move in positive X direction
             {
                 tempOrientation = orientation;
                 orientation = 0;
@@ -93,11 +93,11 @@ void Robot::rotate(double** resultAr, double tempa, double tempb, double** oldMa
                 //print distance and speed
                 if (angleDistance(abs(orientation - tempOrientation)) != 0) // only print if there was a rotation 
                 {
-                    cout << "Time of rotation: " << timeOfMotion(angleDistance(abs(abs(orientation - tempOrientation)))) << endl;
+                    cout << "Time of rotation: " << timeOfMotion(angleDistance(abs(abs(orientation - tempOrientation)))) << "s" << endl;
                 }
             }
 
-            if (tempa > resultAr[0][2]) // if new X is smaller than old X - move in negative X direction
+            if (lastPosX > resultAr[0][2]) // if new X is smaller than old X - move in negative X direction
             {
 
                 tempOrientation = orientation;
@@ -106,22 +106,22 @@ void Robot::rotate(double** resultAr, double tempa, double tempb, double** oldMa
                 //print distance and speed
                 if (angleDistance(abs(orientation - tempOrientation)) != 0) // only print if there was a rotation 
                 {
-                    cout << "Time of rotation: " << timeOfMotion(angleDistance(abs(abs(orientation - tempOrientation)))) << endl;
+                    cout << "Time of rotation: " << timeOfMotion(angleDistance(abs(abs(orientation - tempOrientation)))) << "s" << endl;
                 }
             }
         }
     }
-    if ((resultAr[0][2] - tempa) != 0 && (resultAr[1][2] - tempb) != 0) // move direct to target if both X and Y is non-zero
+    if ((resultAr[0][2] - lastPosX) != 0 && (resultAr[1][2] - lastPosY) != 0) // move direct to target if both X and Y is non-zero
     {
 
-        double hyp = sqrt(pow((resultAr[0][2] - tempa), 2) + pow((resultAr[1][2] - tempb), 2));
+        double hyp = sqrt(pow((resultAr[0][2] - lastPosX), 2) + pow((resultAr[1][2] - lastPosY), 2));
         double angle = (acos(abs(oldMatrix2[0][2]) / hyp)) * 180 / PI_;
 
         tempAngle = angle;
         orientation = orientation + angle;
         ///print distance and speed
 
-        cout << "Time of rotation: " << timeOfMotion(angleDistance(tempAngle)) << endl;
+        cout << "Time of rotation: " << timeOfMotion(angleDistance(tempAngle)) << "s" << endl;
         //}
     }
 }
@@ -174,7 +174,7 @@ void Robot::move(TransformationMatrix newMatrix, Image* img)
 
     //Rotate
     //Should be rewritten to not depend on last transformation Matrix and instead check depending on it's current orientation saved in robotclass
-    rotate(newMove.matrix, lastPosX, lastPosY, lastTransformationOrder.matrix, newMatrix.matrix);
+    rotate(newMove.matrix, lastTransformationOrder.matrix, newMatrix.matrix);
 
     //Move Robot
     double xres, yres;
@@ -193,7 +193,7 @@ void Robot::move(TransformationMatrix newMatrix, Image* img)
     //PRINT SPEED AND DISTANCE
     double distance = getDistance((newMove.matrix[0][2] - lastPosX), (newMove.matrix[1][2] - lastPosY));
     if (timeOfMotion(distance) != 0)
-        cout << "Time of translation: " << timeOfMotion(distance) << endl;
+        cout << "Time of translation: " << timeOfMotion(distance) << "s" << endl;
 
     //Update last position
     lastPosX = newMove.matrix[0][2];
