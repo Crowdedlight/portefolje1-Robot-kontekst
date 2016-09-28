@@ -2,12 +2,14 @@
 
 TransformationMatrix::TransformationMatrix()
 {
+    //Initialzes matrix on heap with zeros to be able to access all elements of matrix
     for (int h = 0; h < 3; h++)
     {
         matrix[h] = new double[3];
     }
 }
 
+// Overload of multiplication. Multiplicates it's matrix with the other class' matrix
 TransformationMatrix TransformationMatrix::operator*(const TransformationMatrix& b) const
 {
     TransformationMatrix newTransform;
@@ -27,7 +29,9 @@ TransformationMatrix TransformationMatrix::operator*(const TransformationMatrix&
     return newTransform;
 }
 
-double** TransformationMatrix::matriceMul3x3(double** a, double** b) // Multiply 3x3 with 3x3 matrix and return the result
+
+// Multiply 3x3 with 3x3 matrix and return the result - Depricated, using overload of multiplication symbol instead
+double** TransformationMatrix::matriceMul3x3(double** a, double** b) 
 {
     double** newTransform = new double*[3];
 
@@ -53,7 +57,8 @@ double** TransformationMatrix::matriceMul3x3(double** a, double** b) // Multiply
     return newTransform;
 }
 
-void TransformationMatrix::print_matrix() // Prints the matrix
+// Prints the matrix
+void TransformationMatrix::print_matrix() 
 {
     int i, j;
     for (i = 0; i < 3; i++)
@@ -68,7 +73,7 @@ void TransformationMatrix::print_matrix() // Prints the matrix
 
 TransformationMatrix::~TransformationMatrix()
 {
-    //Delete it casts exception as it deletes the data before it returns to give the data to variable asking for it. 
+    //Deleting it casts exception as it deletes the data before it returns to give the data to variable asking for it. Fix this another time to not leave data floating on the heap 
     //if (this->matrix != nullptr)
     //    delete this->matrix;
 }

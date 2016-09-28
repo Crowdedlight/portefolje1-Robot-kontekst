@@ -24,7 +24,7 @@ int main(int argc) {
     // do stuff here
 	int channel = 0; // allways 0 on grayscale image
 
-	// Initialize arrays for translations start
+	// Initialize arrays for translations
 	TransformationMatrix H0;
     TransformationMatrix H1;
     TransformationMatrix H2;

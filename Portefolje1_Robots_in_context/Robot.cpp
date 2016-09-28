@@ -2,6 +2,7 @@
 
 
 
+//Sets start values. Startposition and so on
 Robot::Robot(string name, TransformationMatrix startMatrix)
 {
     this->name = name;
@@ -11,7 +12,8 @@ Robot::Robot(string name, TransformationMatrix startMatrix)
     this->lastPosY = startMatrix.matrix[1][2];
 }
 
-double Robot::timeOfMotion(double distance) // takes a distance and calculate time duration from a given speed
+// takes a distance and calculate time duration from a given speed
+double Robot::timeOfMotion(double distance) 
 {
     static double speed = 3;
     static double OneRotLength = 2 * PI_ * 0.1;
@@ -19,13 +21,15 @@ double Robot::timeOfMotion(double distance) // takes a distance and calculate ti
     return time;
 }
 
-double Robot::angleDistance(double angle) // takes an angle and return the distance from robot specification
+// takes an angle and return the distance from robot specification
+double Robot::angleDistance(double angle) 
 {
     double betweenWheels = 0.4;
     return (2 * PI_*(betweenWheels / 2)*(angle / 360));
 }
 
-void Robot::setOrientation() // After each move, check whether the rotation is back to original (if specified so in rotation matrix)
+// After each move, check whether the rotation is back to original (if specified so in rotation matrix)
+void Robot::setOrientation() 
 {
     if (orientation == tempOrientation) // If the old orientation is the same as the new, don't do anything
     {
@@ -126,6 +130,7 @@ void Robot::rotate(double** resultAr, double** oldMatrix1, double** oldMatrix2)
     }
 }
 
+//Prints the workspace
 void Robot::printWorkSpace(TransformationMatrix T1, TransformationMatrix T2, TransformationMatrix T3, TransformationMatrix T4)
 {    
     //Make into points for easier usage
@@ -147,6 +152,7 @@ void Robot::printWorkSpace(TransformationMatrix T1, TransformationMatrix T2, Tra
     cout << endl << "Lowest possible workspace is: (x,y) = (" << workspace.x << "," << workspace.y << ")" << endl;
 }
 
+//Intern function, calculates the workspace needed
 Point Robot::workspaceCal(vector<Point> pointList)
 {
     //Temp variable to save result in
@@ -167,6 +173,7 @@ Point Robot::workspaceCal(vector<Point> pointList)
     return workspace;
 }
 
+// Moves robot and draws the path
 void Robot::move(TransformationMatrix newMatrix, Image* img)
 {
     //Multiply to make new movements
@@ -204,14 +211,17 @@ void Robot::move(TransformationMatrix newMatrix, Image* img)
     currTransformation = newMove;
 }
 
-double Robot::getDistance(double x, double y) // Get distance according to whether to move in X direction or Y direction only or to move along hyp
+// Get distance according to whether to move in X direction or Y direction only or to move along hyp
+double Robot::getDistance(double x, double y) 
 {
     double distance = 0;
 
+    //not moved
     if (x == 0 && y == 0)
     {
         distance = 0;
     }
+    // moves in either x or y
     else if (x == 0 || y == 0)
     {
         if (x == 0)
@@ -223,7 +233,7 @@ double Robot::getDistance(double x, double y) // Get distance according to wheth
             distance = x;
         }
     }
-
+    // moves in the hyp
     if (x != 0 && y != 0)
     {
         double hyp = sqrt(pow(x, 2) + pow(y, 2));
