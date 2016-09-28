@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bresenham.h" />
     <ClInclude Include="Image.hpp" />
     <ClInclude Include="macros.hpp" />
     <ClInclude Include="PPMLoader.hpp" />
@@ -31,7 +30,6 @@
     <None Include="testout.pgm" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bresenham.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="PPMLoader.cpp" />
     <ClCompile Include="source.cpp" />

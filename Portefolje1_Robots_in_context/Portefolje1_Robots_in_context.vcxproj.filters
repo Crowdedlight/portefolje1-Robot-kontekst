@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bresenham.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Image.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -39,9 +36,6 @@
     <None Include="testout.pgm" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bresenham.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

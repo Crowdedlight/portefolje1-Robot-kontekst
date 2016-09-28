@@ -2,7 +2,6 @@
 #include "Image.hpp"
 #include "PPMLoader.hpp"
 #include <vector>
-#include "bresenham.h"
 #include "Robot.h"
 #include "TransformationMatrix.h"
 #include <cmath>
