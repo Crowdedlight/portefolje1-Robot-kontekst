@@ -68,5 +68,7 @@ void TransformationMatrix::print_matrix() // Prints the matrix
 
 TransformationMatrix::~TransformationMatrix()
 {
-    delete matrix;
+    //Delete it casts exception as it deletes the data before it returns to give the data to variable asking for it. 
+    //if (this->matrix != nullptr)
+    //    delete this->matrix;
 }

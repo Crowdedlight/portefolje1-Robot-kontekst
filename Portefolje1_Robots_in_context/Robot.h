@@ -29,6 +29,8 @@ private:
     double tempAngle = 0;
     double tempOrientation = 0;
     double orientation = 0; // Orientation is 0 when pointing in the "normal" positive x-axis. 180 is opposite
+    double lastPosX;
+    double lastPosY;
 
 };
 
